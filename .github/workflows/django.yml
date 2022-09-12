@@ -69,8 +69,6 @@ jobs:
         run: pip install flake8
       - name: Run flake8
         working-directory: ./
-        run: |
-          cd library_back/
-          flake8 --max-line-length=100 library_back
+        run: flake8 --max-line-length=100 library_back
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
