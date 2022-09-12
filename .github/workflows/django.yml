@@ -65,16 +65,6 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Checkout PyTorch
         uses: actions/checkout@master
-      - name: Install Dependencies
-        run: |
-          cd library_back/
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-      - name: Run migrations
-        run: |
-          cd library_back/
-          python manage.py makemigrations
-          python manage.py migrate
       - name: Install flake8
         run: |
           cd library_back/
