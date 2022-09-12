@@ -1,0 +1,39 @@
+name: Docker Publish
+
+on:
+  workflow_run:
+    workflows: CI
+    types:
+      - completed
+
+jobs:
+  deploy:
+    name: Push Docker image to Docker Hub
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      
+
+      - name: Build & push Backend Docker image
+        uses: mr-smithers-excellent/docker-build-push@v5  
+        with:
+          image: natanaelfernandes/gces-2022-1
+          registry: docker.io
+          directory: ./library_back
+          dockerfile: ./library_back/Dockerfile
+          tags: library_back,latest
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Build & push Frontend Docker image
+        uses: mr-smithers-excellent/docker-build-push@v5  
+        with:
+          image: natanaelfernandes/gces-2022-1
+          registry: docker.io
+          directory: ./library_front
+          dockerfile: ./library_front/Dockerfile
+          tags: library_front,latest
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
