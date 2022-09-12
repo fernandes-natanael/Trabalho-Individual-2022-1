@@ -1,0 +1,43 @@
+name: React CI
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }} lint, test and coverage
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - working-directory: ./library_front
+        run: |
+          yarn install
+          yarn test
+  
+  lint: 
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.8
+      - name: Install flake8
+        working-directory: ./
+        run: pip install flake8
+      - name: Lint Frontend
+        working-directory: ./
+        run: flake8 --max-line-length=100 library_front
