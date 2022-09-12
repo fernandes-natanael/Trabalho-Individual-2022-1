@@ -1,0 +1,53 @@
+name : Django Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 9, 11, 15, 18, * * 1,2,3,4,5'
+
+jobs:
+
+
+
+  test:
+    name: Backend Testing
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Testing Execution
+        working-directory: ./library_back
+        run: |
+          python3 -m venv env  
+          . env/bin/activate
+          pip install -r requirements.txt
+          python manage.py test
+
+  lint:
+    name: Backend Lint
+    runs-on: ubuntu-latest
+
+    env:
+      working-directory: ./library_back
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Execute flake8 to Lint code
+        working-directory: ./library_back
+        run: |
+          python -m pip install --upgrade pip
+          pip3 install flake8
+          flake8 --extend-ignore=E302,E101,E131,W191,W293,W292,W291 --count --select=E9,F63,F7,F82 --exclude=*.pyc,*migrations* --show-source --statistics
+          flake8 --extend-ignore=E302,E101,E131,W191,W293,W292,W291 --count --max-complexity=10 --max-line-length=226 --exclude=*.pyc,*migrations* --statistics
