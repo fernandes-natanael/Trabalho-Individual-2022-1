@@ -66,12 +66,11 @@ jobs:
       - name: Checkout PyTorch
         uses: actions/checkout@master
       - name: Install flake8
-        run: |
-          cd library_back/
-          pip install flake8
+        run: pip install flake8
       - name: Run flake8
+        working-directory: ./
         run: |
           cd library_back/
-          flake8
+          flake8 --max-line-length=100 library_back
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
