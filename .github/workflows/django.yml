@@ -7,6 +7,23 @@ on:
     branches: [ "main" ]
 
 jobs:
+  build:
+    name: run / build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code from Github
+        uses: actions/checkout@v3
+      - name: Build image
+        run: |
+          docker build library_back -f library_back/Dockerfile -t back/django:$GITHUB_SHA
+          docker save -o docker_image_$GITHUB_SHA back/django:$GITHUB_SHA
+      - name: Caching image
+        uses: actions/cache@v3
+        with:
+          key: library_back
+          path: docker_image_${{ github.sha }}
+
+
   test:
     runs-on: ubuntu-latest
     services:
