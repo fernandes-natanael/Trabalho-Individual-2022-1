@@ -8,6 +8,6 @@ build:
 release:
   image: web
   command:
-    - ./release.sh
+    - ./back-release.sh
 run:
   web: gunicorn src.wsgi:application
